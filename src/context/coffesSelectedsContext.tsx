@@ -1,6 +1,8 @@
-import { ReactNode, createContext } from "react";
+import { ReactNode, createContext, useEffect } from "react";
 import { useState } from "react";
 import coffeCardData from "../../coffeCardData.json";
+
+const STORAGE_KEY = 'coffesSelected'
 
 interface coffes {
   id: string | undefined;
@@ -19,7 +21,7 @@ interface coffeSelectedsContextType {
   // handleCoffeQuantityIncrement: () => void;
   // handleCoffeQuantityDecrement: () => void;
   handleRemoveCoffes: (id: string | undefined) => void;
-  handleCoffesSelect: (id: string, selected: boolean) => void;
+  handleCoffesSelect: (item: coffes) => void;
 }
 
 interface CoffeSelectedsContextProviderProps {
@@ -33,9 +35,16 @@ export const coffeSelectedsContext = createContext(
 const CoffeSelectedsContextProvider = ({
   children,
 }: CoffeSelectedsContextProviderProps) => {
-  const [coffes, setCoffes] = useState<coffes[]>([]);
+  const [coffes, setCoffes] = useState<coffes[]>(() => {
+    const storageCoffees = localStorage.getItem(STORAGE_KEY)
+    if (storageCoffees) {
+      return JSON.parse(storageCoffees)
+    }
+    return []
+  });
   const [quantityCoffe, setQuantityCoffe] = useState<number>(1);
-  const coffeData = JSON.parse(localStorage.getItem("coffeData") || "");
+
+  // const coffeData = JSON.parse(localStorage.getItem("coffeData") || "");
 
   // const handleCoffeQuantityIncrement = () => {
   //   setQuantityCoffe((state) => state + 1);
@@ -47,20 +56,14 @@ const CoffeSelectedsContextProvider = ({
   //   }
   // };
 
-  const handleCoffesSelect = (id: string, selected: boolean) => {
-    const coffesSelected = coffeData.findIndex((coffe) => {
-      return coffe.id === id;
-    });
-    coffeData[coffesSelected].selected = !selected;
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(coffes))
+  }, [coffes])
 
-    const filterlistCoffesSelected = coffeData.filter((coffe) => {
-      return coffe.selected === true;
-    });
-
-    localStorage.setItem(
-      "coffesSelected",
-      JSON.stringify(filterlistCoffesSelected)
-    );
+  const handleCoffesSelect = (item: coffes) => {
+    const currentItems = coffes
+    currentItems?.push(item)
+    setCoffes([...currentItems])
   };
 
   const handleRemoveCoffes = (id: string | undefined) => {
@@ -74,11 +77,11 @@ const CoffeSelectedsContextProvider = ({
     <coffeSelectedsContext.Provider
       value={{
         handleRemoveCoffes,
-        coffes,
         handleCoffesSelect,
         // handleCoffeQuantityIncrement,
         // handleCoffeQuantityDecrement,
         quantityCoffe,
+        coffes
       }}
     >
       {children}
