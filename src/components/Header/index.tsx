@@ -2,7 +2,8 @@ import { HeaderContainer, MapPinButton, ShoppingCartButton } from "./styles";
 import LogoCoffeDelivery from "../../assets/LogoCoffeDelivery.svg";
 import { ShoppingCart, MapPin } from "phosphor-react";
 import { NavLink } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { coffeSelectedsContext } from "../../context/coffesSelectedsContext";
 
 interface HeaderProps {
   ToggleButton: Function;
@@ -14,8 +15,13 @@ interface datasLocationType {
 }
 
 const Header = (props: HeaderProps) => {
-  const coffeData = JSON.parse(localStorage.getItem("coffesSelected") || "");
   const [datasLocation, setDatasLocation] = useState<datasLocationType>({});
+
+  const { coffes } = useContext(coffeSelectedsContext);
+
+  useEffect(() => {
+    console.log(coffes)
+  }, [coffes])
 
   const location = async () => {
     try {
@@ -53,7 +59,7 @@ const Header = (props: HeaderProps) => {
         <NavLink to="/checkout">
           <ShoppingCartButton>
             <ShoppingCart weight="fill" color="#C47F17" size={22} />
-            <span>2</span>
+            <span>{coffes.length}</span>
           </ShoppingCartButton>
         </NavLink>
       </nav>

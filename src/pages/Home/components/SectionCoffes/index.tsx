@@ -33,8 +33,6 @@ const SectionCoffes = ({
 }: SectionCoffesProps) => {
   const { handleCoffesSelect } = useContext(coffeSelectedsContext);
 
-  const coffeData = JSON.parse(localStorage.getItem("coffesSelected") || "");
-
   return (
     <CardContainer>
       <ContentCard>
@@ -64,22 +62,16 @@ const SectionCoffes = ({
           </Testando3>
           <ShoppingCartButton
             onClick={() => {
-              handleCoffesSelect(id, selected);
-              const actual = JSON.parse(
-                localStorage.getItem("coffesSelected")!
-              );
-              actual.push({
+              handleCoffesSelect({
                 id,
                 categories,
                 image,
                 name,
                 paragraphy,
                 price,
-                quantity: 1,
+                quantity: '1',
                 selected: true,
-              });
-
-              console.log(actual);
+              })
             }}
           >
             <ShoppingCartSimple weight="fill" color="white" size={20} />

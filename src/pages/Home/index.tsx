@@ -12,7 +12,7 @@ import { ProductInformation } from "./components/ProductInformation";
 import { SectionCoffes } from "./components/SectionCoffes";
 
 const Home = () => {
-  localStorage.setItem("coffeData", JSON.stringify(coffeCardData));
+  // localStorage.setItem("coffeData", JSON.stringify(coffeCardData));
   const coffeData = JSON.parse(localStorage.getItem("coffeData") || "");
 
   return (
