@@ -56,15 +56,14 @@ const CoffeSelectedsContextProvider = ({
   //   }
   // };
 
-  // useEffect(() => {
-  //   localStorage.setItem(STORAGE_KEY, JSON.stringify(coffes))
-  // }, [coffes])
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(coffes))
+  }, [coffes])
 
   const handleCoffesSelect = (item: coffes) => {
     const currentItems = coffes
     currentItems?.push(item)
     setCoffes([...currentItems])
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentItems))
   };
 
   const handleRemoveCoffes = (id: string | undefined) => {
